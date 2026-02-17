@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,18 +30,15 @@ jobs:
           docker login --username AWS --password-stdin $ECR_REGISTRY
 
       - name: Build Docker image
-        run: |
-          docker build -t ecs-app .
+        run: docker build -t ecs-app .
 
-      - name: Tag Docker image
-        run: |
-          docker tag ecs-app:latest $ECR_REGISTRY/ecs-app:latest
+      - name: Tag image
+        run: docker tag ecs-app:latest $ECR_REGISTRY/ecs-app:latest
 
-      - name: Push Docker image
-        run: |
-          docker push $ECR_REGISTRY/ecs-app:latest
+      - name: Push image
+        run: docker push $ECR_REGISTRY/ecs-app:latest
 
-      - name: Force ECS deployment
+      - name: Deploy to ECS
         run: |
           aws ecs update-service \
             --cluster ecs-app-cluster \
