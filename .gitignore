@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Terraform lock file
+.terraform.lock.hcl
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
